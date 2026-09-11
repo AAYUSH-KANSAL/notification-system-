@@ -135,16 +135,19 @@ SIMPLE_JWT = {
 }
 
 # CORS Configuration
-CORS_ALLOW_ALL_ORIGINS = DEBUG
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
-frontend_url = os.getenv("FRONTEND_URL")
-if frontend_url:
-    CORS_ALLOWED_ORIGINS.append(frontend_url.rstrip("/"))
+frontend_url = os.getenv("FRONTEND_URL", "").strip()
+if frontend_url == "*" or DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ALLOW_ALL_ORIGINS = False
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ]
+    if frontend_url:
+        CORS_ALLOWED_ORIGINS.append(frontend_url.rstrip("/"))
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [

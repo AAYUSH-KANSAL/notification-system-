@@ -64,7 +64,7 @@ class WebPushService:
         if player_id:
             payload["include_subscription_ids"] = [str(player_id)]
         else:
-            payload["included_segments"] = ["Total Subscriptions"]
+            payload["included_segments"] = ["Subscribed Users"]
 
         try:
             response = requests.post(url, headers=headers, json=payload, timeout=10)
@@ -77,16 +77,29 @@ class WebPushService:
                         "status_code": response.status_code,
                         "notification_id": data.get("id"),
                         "recipients_count": data.get("recipients", 0),
+                        "target": "subscription_id" if player_id else "Subscribed Users segment",
                         "mock": False
                     }
                 }
             else:
+                raw_errors = data.get("errors", [])
+                error_msg = "OneSignal dispatch failed"
+                if isinstance(raw_errors, list) and raw_errors:
+                    error_msg = raw_errors[0]
+                elif isinstance(raw_errors, dict):
+                    error_msg = str(raw_errors)
+
+                hint = ""
+                if "not subscribed" in str(raw_errors).lower():
+                    hint = "No active web push subscribers registered for this OneSignal App ID yet. Please log into the frontend, click 'Enable Push Notifications', and allow browser notifications."
+
                 return {
                     "status": "failed",
                     "details": {
                         "provider": "OneSignal",
                         "status_code": response.status_code,
-                        "errors": data.get("errors", "OneSignal dispatch failed"),
+                        "error": error_msg,
+                        "hint": hint,
                         "raw_response": data,
                         "mock": False
                     }

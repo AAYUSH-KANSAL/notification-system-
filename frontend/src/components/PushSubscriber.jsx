@@ -27,6 +27,24 @@ export const PushSubscriber = ({ showToast }) => {
                   player_id: subId,
                 });
               }
+
+              // Listen for subscription id assignment / changes
+              OneSignal.User?.PushSubscription?.addEventListener?.("change", async (event) => {
+                const newId = event?.current?.id || OneSignal.User?.PushSubscription?.id;
+                if (newId) {
+                  try {
+                    await api.subscribePush({
+                      userAgent: navigator.userAgent,
+                      subscribedAt: new Date().toISOString(),
+                      type: "browser_push",
+                      player_id: newId,
+                    });
+                    setIsSubscribed(true);
+                  } catch (e) {
+                    console.warn("Push sync failed on change event:", e);
+                  }
+                }
+              });
             } catch (err) {
               console.warn("OneSignal auto-sync error:", err);
             }

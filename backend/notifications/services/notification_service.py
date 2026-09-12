@@ -177,6 +177,9 @@ class NotificationService:
         rendered_subject = render_template(template.subject or "Notification", ctx)
         rendered_body = render_template(template.body, ctx)
         recipient = ctx.get("user_email") or (user.email if user and user.email else "")
+        test_email = getattr(settings, "RESEND_TEST_RECIPIENT", "").strip()
+        if (not recipient or recipient.endswith("@example.com")) and test_email:
+            recipient = test_email
 
         res = EmailService.send(
             recipient=recipient,
@@ -243,13 +246,14 @@ class NotificationService:
         return res
 
     @classmethod
-    def test_send_template(cls, template: ChannelTemplate, test_context: dict = None) -> dict:
+    def test_send_template(cls, template: ChannelTemplate, test_context: dict = None, user=None) -> dict:
         """
         Sends a test notification for an individual channel template.
         """
+        fallback_email = getattr(settings, "RESEND_TEST_RECIPIENT", "").strip() or "delivered@resend.dev"
         ctx = {
-            "user_name": "Tester",
-            "user_email": getattr(settings, "RESEND_TEST_RECIPIENT", "").strip() or "test@example.com",
+            "user_name": getattr(user, "username", "Tester") if user else "Tester",
+            "user_email": (getattr(user, "email", "") or fallback_email) if user else fallback_email,
             "timestamp": timezone.now().strftime("%Y-%m-%d %H:%M:%S UTC"),
         }
         if test_context:
@@ -259,11 +263,11 @@ class NotificationService:
         channel = template.channel
 
         if channel == "whatsapp":
-            res = cls._dispatch_whatsapp(f"{trigger_key}:test", template, None, ctx)
+            res = cls._dispatch_whatsapp(f"{trigger_key}:test", template, user, ctx)
         elif channel == "email":
-            res = cls._dispatch_email(f"{trigger_key}:test", template, None, ctx)
+            res = cls._dispatch_email(f"{trigger_key}:test", template, user, ctx)
         elif channel == "webpush":
-            res = cls._dispatch_webpush(f"{trigger_key}:test", template, None, ctx)
+            res = cls._dispatch_webpush(f"{trigger_key}:test", template, user, ctx)
         else:
             res = {"status": "failed", "details": {"error": f"Unknown channel '{channel}'"}}
 

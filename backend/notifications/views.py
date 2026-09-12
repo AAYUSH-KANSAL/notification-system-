@@ -222,7 +222,7 @@ class ChannelTemplateViewSet(viewsets.ModelViewSet):
         """
         template = self.get_object()
         context = request.data.get("context", {})
-        result = NotificationService.test_send_template(template, test_context=context)
+        result = NotificationService.test_send_template(template, test_context=context, user=request.user)
         return Response({
             "template_id": template.id,
             "channel": template.channel,

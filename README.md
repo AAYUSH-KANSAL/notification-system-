@@ -23,7 +23,7 @@ cd frontend
 npm install
 npm run dev
 ```
-Frontend runs at: **`http://localhost:3000`**
+Frontend runs at: **`http://localhost:5173`**
 
 ---
 
@@ -56,7 +56,7 @@ Create a `.env` file in the project root:
 # Django
 SECRET_KEY=your-secret-key-12345
 DEBUG=True
-FRONTEND_URL=http://localhost:3000
+FRONTEND_URL=http://localhost:5173
 
 # WhatsApp (Twilio Sandbox - Recommended)
 TWILIO_ACCOUNT_SID=your_twilio_account_sid
@@ -127,7 +127,7 @@ notification-system/
 │           └── webpush.py              # OneSignal REST API integration
 ├── frontend/
 │   ├── package.json
-│   ├── vite.config.js                  # Vite dev server (port 3000)
+│   ├── vite.config.js                  # Vite dev server (port 5173)
 │   ├── index.html                      # OneSignal SDK initialization
 │   ├── public/
 │   │   └── OneSignalSDKWorker.js       # Browser push notification service worker

@@ -9,8 +9,10 @@ if (typeof window !== "undefined" && onesignalAppId) {
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   window.OneSignalDeferred.push(async function (OneSignal) {
     try {
+      const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
       await OneSignal.init({
         appId: onesignalAppId,
+        allowLocalhostAsSecureOrigin: isLocalhost,
       });
     } catch (err) {
       console.warn("OneSignal initialization error:", err);

@@ -155,8 +155,14 @@ else:
         "http://127.0.0.1:5173",
     ]
     if frontend_url:
-        CORS_ALLOWED_ORIGINS.append(frontend_url.rstrip("/"))
+        for origin in frontend_url.split(","):
+            cleaned = origin.strip().rstrip("/")
+            if cleaned and cleaned not in CORS_ALLOWED_ORIGINS:
+                CORS_ALLOWED_ORIGINS.append(cleaned)
 
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://.*\.vercel\.app$",
+]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
     "authorization",

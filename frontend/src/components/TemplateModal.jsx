@@ -89,9 +89,10 @@ export const TemplateModal = ({
     }
     setIsTesting(true);
     try {
+      const currentUser = api.getUser();
       const res = await api.testTemplate(template.id, {
-        user_name: "Ayush (Test)",
-        user_email: "ayush.kansal321@gmail.com",
+        user_name: currentUser?.first_name || currentUser?.username || "Admin",
+        user_email: currentUser?.email || "",
       });
       const mode = res.result?.details?.mode || res.result?.status;
       showToast(

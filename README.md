@@ -62,7 +62,7 @@ FRONTEND_URL=http://localhost:5173
 TWILIO_ACCOUNT_SID=your_twilio_account_sid
 TWILIO_AUTH_TOKEN=your_twilio_auth_token
 TWILIO_WHATSAPP_FROM=whatsapp:+14155238886
-WHATSAPP_TEST_RECIPIENT=+918433055349
+WHATSAPP_TEST_RECIPIENT=+91XXXXXXXXXX
 
 # Email (Resend)
 RESEND_API_KEY=your_resend_api_key
@@ -72,6 +72,29 @@ RESEND_FROM_EMAIL=onboarding@resend.dev
 ONESIGNAL_APP_ID=your_onesignal_app_id
 ONESIGNAL_REST_API_KEY=your_onesignal_rest_key
 ```
+
+### 🚀 Production Deployment Environment Variables
+
+#### 1. Vercel (Frontend)
+Set these in **Vercel Dashboard > Project Settings > Environment Variables**:
+- `VITE_API_URL`: Your Render backend URL (e.g. `https://your-backend.onrender.com` without trailing slash).
+- `VITE_ONESIGNAL_APP_ID`: Your OneSignal App ID (from OneSignal Dashboard > Settings > Keys & IDs).
+
+#### 2. Render (Backend)
+Set these in **Render Dashboard > Environment**:
+- `SECRET_KEY`: Django secret key
+- `DEBUG`: `False`
+- `DATABASE_URL`: Your Supabase PostgreSQL pooler URL
+- `FRONTEND_URL`: Your Vercel frontend URL (e.g. `https://notification-system-jade-two.vercel.app`)
+- `ONESIGNAL_APP_ID`: Your OneSignal App ID
+- `ONESIGNAL_REST_API_KEY`: Your OneSignal REST API Key
+- `RESEND_API_KEY`: Your Resend API Key
+- `RESEND_FROM_EMAIL`: `onboarding@resend.dev`
+- `RESEND_TEST_RECIPIENT`: Your recipient email for testing
+- `TWILIO_ACCOUNT_SID`: (Optional) Twilio Account SID
+- `TWILIO_AUTH_TOKEN`: (Optional) Twilio Auth Token
+- `TWILIO_WHATSAPP_FROM`: (Optional) `whatsapp:+14155238886`
+- `WHATSAPP_TEST_RECIPIENT`: (Optional) Your WhatsApp phone number in E.164 format
 
 ---
 

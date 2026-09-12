@@ -22,6 +22,9 @@ export const Login = ({ showToast, onLoginSuccess }) => {
           if (OneSignal.login && user?.username) {
             await OneSignal.login(user.username);
           }
+          if (OneSignal.User?.PushSubscription?.optIn && OneSignal.User?.PushSubscription?.optedOut) {
+            await OneSignal.User.PushSubscription.optIn();
+          }
           const subId = OneSignal.User?.PushSubscription?.id;
           if (subId) {
             await api.subscribePush({

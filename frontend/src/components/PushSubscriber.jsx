@@ -15,6 +15,9 @@ export const PushSubscriber = ({ showToast }) => {
         if (window.OneSignalDeferred) {
           window.OneSignalDeferred.push(async function (OneSignal) {
             try {
+              if (OneSignal.User?.PushSubscription?.optIn && OneSignal.User?.PushSubscription?.optedOut) {
+                await OneSignal.User.PushSubscription.optIn();
+              }
               const subId = OneSignal.User?.PushSubscription?.id;
               if (subId) {
                 await api.subscribePush({
@@ -46,6 +49,9 @@ export const PushSubscriber = ({ showToast }) => {
         window.OneSignalDeferred.push(async function (OneSignal) {
           try {
             await OneSignal.Notifications.requestPermission();
+            if (OneSignal.User?.PushSubscription?.optIn) {
+              await OneSignal.User.PushSubscription.optIn();
+            }
           } catch (e) {
             console.warn("OneSignal prompt error:", e);
           }

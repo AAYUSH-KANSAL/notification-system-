@@ -149,7 +149,7 @@ class NotificationService:
     @classmethod
     def _dispatch_whatsapp(cls, trigger_key: str, template: ChannelTemplate, user, ctx: dict) -> dict:
         rendered_body = render_template(template.body, ctx)
-        fallback_phone = getattr(settings, "WHATSAPP_TEST_RECIPIENT", "").strip() or "+918433055349"
+        fallback_phone = getattr(settings, "WHATSAPP_TEST_RECIPIENT", "").strip()
         recipient = ctx.get("phone") or getattr(user, "phone", None) or fallback_phone
 
         res = WhatsAppService.send(
@@ -176,7 +176,7 @@ class NotificationService:
     def _dispatch_email(cls, trigger_key: str, template: ChannelTemplate, user, ctx: dict) -> dict:
         rendered_subject = render_template(template.subject or "Notification", ctx)
         rendered_body = render_template(template.body, ctx)
-        recipient = ctx.get("user_email") or (user.email if user else "ayush.kansal321@gmail.com")
+        recipient = ctx.get("user_email") or (user.email if user and user.email else "")
 
         res = EmailService.send(
             recipient=recipient,
@@ -248,8 +248,8 @@ class NotificationService:
         Sends a test notification for an individual channel template.
         """
         ctx = {
-            "user_name": "Ayush Kansal (Tester)",
-            "user_email": "ayush.kansal321@gmail.com",
+            "user_name": "Tester",
+            "user_email": getattr(settings, "RESEND_TEST_RECIPIENT", "").strip() or "test@example.com",
             "timestamp": timezone.now().strftime("%Y-%m-%d %H:%M:%S UTC"),
         }
         if test_context:

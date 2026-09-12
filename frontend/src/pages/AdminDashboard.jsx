@@ -65,9 +65,10 @@ export const AdminDashboard = ({ user, onLogout, showToast }) => {
   const handleManualFire = async (triggerKey) => {
     setFiringTrigger(triggerKey);
     try {
+      const currentUser = api.getUser();
       const res = await api.fireTrigger(triggerKey, {
-        user_name: "Manual Simulator User",
-        user_email: "manual@example.com",
+        user_name: currentUser?.first_name || currentUser?.username || "Admin",
+        user_email: currentUser?.email || "",
       });
       showToast(
         `Trigger '${triggerKey.toUpperCase()}' dispatched across enabled channels!`,

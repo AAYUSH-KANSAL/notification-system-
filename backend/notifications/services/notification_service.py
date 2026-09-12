@@ -79,11 +79,17 @@ class NotificationService:
             return {"status": "skipped", "reason": f"Trigger '{trigger_key}' is inactive", "results": {}}
 
         # Build context dictionary
+        test_email = getattr(settings, "RESEND_TEST_RECIPIENT", "").strip()
         user_name = "Guest"
-        user_email = "guest@example.com"
+        user_email = test_email or "guest@notification.system"
         if user and user.is_authenticated:
             user_name = user.get_full_name() or user.first_name or user.username
-            user_email = user.email or f"{user.username}@example.com"
+            if user.email and not user.email.endswith("@example.com"):
+                user_email = user.email
+            elif test_email:
+                user_email = test_email
+            else:
+                user_email = f"{user.username}@notification.system"
 
         ctx = {
             "user_name": user_name,
@@ -92,6 +98,9 @@ class NotificationService:
         }
         if context:
             ctx.update(context)
+            ctx_email = ctx.get("user_email", "")
+            if (not ctx_email or ctx_email.endswith("@example.com")):
+                ctx["user_email"] = test_email or user_email
 
         # Retrieve templates for this trigger
         templates_qs = ChannelTemplate.objects.filter(trigger=trigger)

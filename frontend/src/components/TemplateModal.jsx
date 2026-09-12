@@ -55,9 +55,10 @@ export const TemplateModal = ({
   // Preview helper
   const renderPreview = (text) => {
     if (!text) return "";
+    const currentUser = api.getUser();
     return text
-      .replace(/\{\{\s*user_name\s*\}\}/g, "Ayush Sharma")
-      .replace(/\{\{\s*user_email\s*\}\}/g, "ayush@example.com")
+      .replace(/\{\{\s*user_name\s*\}\}/g, currentUser?.first_name || currentUser?.username || "Demo User")
+      .replace(/\{\{\s*user_email\s*\}\}/g, currentUser?.email || "user@notification.system")
       .replace(/\{\{\s*timestamp\s*\}\}/g, new Date().toUTCString());
   };
 

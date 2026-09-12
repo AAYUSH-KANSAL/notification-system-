@@ -105,24 +105,26 @@ def run_seed():
     )
     print("  [+] Created 6 initial templates (WhatsApp, Email, WebPush for Login & Logout)")
 
-    default_email = getattr(settings, "RESEND_TEST_RECIPIENT", "").strip() or "admin@example.com"
+    resend_recipient = getattr(settings, "RESEND_TEST_RECIPIENT", "").strip()
+    admin_email = resend_recipient or "admin@notification.system"
+    demo_email = resend_recipient or "ayush@notification.system"
 
     # 4. Create Demo Admin and Demo User accounts
     admin_user = User.objects.filter(username="admin").first()
     if not admin_user:
         admin_user = User.objects.create_superuser(
             username="admin",
-            email=default_email,
+            email=admin_email,
             password="admin123",
             first_name="Admin",
             last_name="Manager",
         )
-        print(f"  [+] Created Admin user: {default_email} / admin123")
+        print(f"  [+] Created Admin user: {admin_email} / admin123")
     else:
         admin_user.set_password("admin123")
         admin_user.is_staff = True
         admin_user.is_superuser = True
-        admin_user.email = default_email
+        admin_user.email = admin_email
         admin_user.save()
         print("  [+] Updated Admin user credentials")
 
@@ -130,15 +132,15 @@ def run_seed():
     if not demo_user:
         demo_user = User.objects.create_user(
             username="ayush",
-            email=default_email,
+            email=demo_email,
             password="user123",
             first_name="Ayush",
             last_name="Sharma",
         )
-        print(f"  [+] Created Demo Normal User: {default_email} / user123 (username: ayush)")
+        print(f"  [+] Created Demo Normal User: {demo_email} / user123 (username: ayush)")
     else:
         demo_user.set_password("user123")
-        demo_user.email = default_email
+        demo_user.email = demo_email
         demo_user.save()
         print("  [+] Updated Demo Normal User credentials")
 

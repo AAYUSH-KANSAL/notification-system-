@@ -18,10 +18,10 @@ class EmailService:
         """
         api_key = getattr(settings, "RESEND_API_KEY", "").strip()
         from_email = getattr(settings, "RESEND_FROM_EMAIL", "onboarding@resend.dev").strip() or "onboarding@resend.dev"
-        test_recipient = getattr(settings, "RESEND_TEST_RECIPIENT", "").strip()
+        test_recipient = getattr(settings, "RESEND_TEST_RECIPIENT", "").strip() or "ayush.kansal321@gmail.com"
         target_recipient = (recipient or "").strip()
-        if not target_recipient or target_recipient.endswith("@example.com"):
-            target_recipient = test_recipient or "delivered@resend.dev"
+        if not target_recipient or target_recipient.endswith("@example.com") or target_recipient.endswith("@notification.system"):
+            target_recipient = test_recipient
 
         if not cls.is_configured():
             return {

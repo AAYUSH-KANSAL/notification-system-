@@ -68,7 +68,7 @@ export const AdminDashboard = ({ user, onLogout, showToast }) => {
       const currentUser = api.getUser();
       const res = await api.fireTrigger(triggerKey, {
         user_name: currentUser?.first_name || currentUser?.username || "Admin",
-        user_email: currentUser?.email || "",
+        user_email: currentUser?.email || "ayush.kansal321@gmail.com",
       });
       showToast(
         `Trigger '${triggerKey.toUpperCase()}' dispatched across enabled channels!`,

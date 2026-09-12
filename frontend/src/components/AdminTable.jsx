@@ -32,7 +32,7 @@ export const AdminTable = ({ triggers, onRefresh, onEditTemplate, showToast }) =
       const currentUser = api.getUser();
       const res = await api.testTemplate(template.id, {
         user_name: currentUser?.first_name || currentUser?.username || "Admin",
-        user_email: currentUser?.email || "",
+        user_email: currentUser?.email || "ayush.kansal321@gmail.com",
       });
       const mode = res.result?.details?.mode || res.result?.status;
       showToast(

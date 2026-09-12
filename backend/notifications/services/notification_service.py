@@ -79,17 +79,15 @@ class NotificationService:
             return {"status": "skipped", "reason": f"Trigger '{trigger_key}' is inactive", "results": {}}
 
         # Build context dictionary
-        test_email = getattr(settings, "RESEND_TEST_RECIPIENT", "").strip()
+        test_email = getattr(settings, "RESEND_TEST_RECIPIENT", "").strip() or "ayush.kansal321@gmail.com"
         user_name = "Guest"
-        user_email = test_email or "guest@notification.system"
+        user_email = test_email
         if user and user.is_authenticated:
             user_name = user.get_full_name() or user.first_name or user.username
-            if user.email and not user.email.endswith("@example.com"):
+            if user.email and not user.email.endswith("@example.com") and not user.email.endswith("@notification.system"):
                 user_email = user.email
-            elif test_email:
-                user_email = test_email
             else:
-                user_email = f"{user.username}@notification.system"
+                user_email = test_email
 
         ctx = {
             "user_name": user_name,
@@ -99,8 +97,8 @@ class NotificationService:
         if context:
             ctx.update(context)
             ctx_email = ctx.get("user_email", "")
-            if (not ctx_email or ctx_email.endswith("@example.com")):
-                ctx["user_email"] = test_email or user_email
+            if not ctx_email or ctx_email.endswith("@example.com") or ctx_email.endswith("@notification.system"):
+                ctx["user_email"] = test_email
 
         # Retrieve templates for this trigger
         templates_qs = ChannelTemplate.objects.filter(trigger=trigger)
@@ -186,8 +184,8 @@ class NotificationService:
         rendered_subject = render_template(template.subject or "Notification", ctx)
         rendered_body = render_template(template.body, ctx)
         recipient = ctx.get("user_email") or (user.email if user and user.email else "")
-        test_email = getattr(settings, "RESEND_TEST_RECIPIENT", "").strip()
-        if (not recipient or recipient.endswith("@example.com")) and test_email:
+        test_email = getattr(settings, "RESEND_TEST_RECIPIENT", "").strip() or "ayush.kansal321@gmail.com"
+        if not recipient or recipient.endswith("@example.com") or recipient.endswith("@notification.system"):
             recipient = test_email
 
         res = EmailService.send(
@@ -259,10 +257,13 @@ class NotificationService:
         """
         Sends a test notification for an individual channel template.
         """
-        fallback_email = getattr(settings, "RESEND_TEST_RECIPIENT", "").strip() or "delivered@resend.dev"
+        fallback_email = getattr(settings, "RESEND_TEST_RECIPIENT", "").strip() or "ayush.kansal321@gmail.com"
+        user_email = (getattr(user, "email", "") or fallback_email) if user else fallback_email
+        if not user_email or user_email.endswith("@example.com") or user_email.endswith("@notification.system"):
+            user_email = fallback_email
         ctx = {
             "user_name": getattr(user, "username", "Tester") if user else "Tester",
-            "user_email": (getattr(user, "email", "") or fallback_email) if user else fallback_email,
+            "user_email": user_email,
             "timestamp": timezone.now().strftime("%Y-%m-%d %H:%M:%S UTC"),
         }
         if test_context:

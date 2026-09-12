@@ -105,9 +105,9 @@ def run_seed():
     )
     print("  [+] Created 6 initial templates (WhatsApp, Email, WebPush for Login & Logout)")
 
-    resend_recipient = getattr(settings, "RESEND_TEST_RECIPIENT", "").strip()
-    admin_email = resend_recipient or "admin@notification.system"
-    demo_email = resend_recipient or "ayush@notification.system"
+    resend_recipient = getattr(settings, "RESEND_TEST_RECIPIENT", "").strip() or "ayush.kansal321@gmail.com"
+    admin_email = resend_recipient
+    demo_email = resend_recipient
 
     # 4. Create Demo Admin and Demo User accounts
     admin_user = User.objects.filter(username="admin").first()

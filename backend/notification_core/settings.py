@@ -175,6 +175,7 @@ CORS_ALLOW_HEADERS = [
 # Email (Resend)
 RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
 RESEND_FROM_EMAIL = os.getenv("RESEND_FROM_EMAIL", "onboarding@resend.dev")
+RESEND_TEST_RECIPIENT = os.getenv("RESEND_TEST_RECIPIENT", "ayush.kansal321@gmail.com").strip()
 
 # WhatsApp (Option 1: Twilio Sandbox | Option 2: Meta Cloud API)
 TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID", "")

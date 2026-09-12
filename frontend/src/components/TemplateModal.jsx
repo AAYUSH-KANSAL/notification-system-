@@ -57,8 +57,8 @@ export const TemplateModal = ({
     if (!text) return "";
     const currentUser = api.getUser();
     return text
-      .replace(/\{\{\s*user_name\s*\}\}/g, currentUser?.first_name || currentUser?.username || "Demo User")
-      .replace(/\{\{\s*user_email\s*\}\}/g, currentUser?.email || "user@notification.system")
+      .replace(/\{\{\s*user_name\s*\}\}/g, currentUser?.first_name || currentUser?.username || "Ayush Sharma")
+      .replace(/\{\{\s*user_email\s*\}\}/g, currentUser?.email || "ayush.kansal321@gmail.com")
       .replace(/\{\{\s*timestamp\s*\}\}/g, new Date().toUTCString());
   };
 
@@ -93,7 +93,7 @@ export const TemplateModal = ({
       const currentUser = api.getUser();
       const res = await api.testTemplate(template.id, {
         user_name: currentUser?.first_name || currentUser?.username || "Admin",
-        user_email: currentUser?.email || "",
+        user_email: currentUser?.email || "ayush.kansal321@gmail.com",
       });
       const mode = res.result?.details?.mode || res.result?.status;
       showToast(
